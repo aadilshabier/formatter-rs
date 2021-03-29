@@ -15,7 +15,7 @@ fn main() {
                     Arg::with_name("file")
                         .long("file")
                         .short("f")
-                        .help("Removes unwanted whitespace")
+                        .help("Removes unwanted whitespace and returns formatted text")
                         .takes_value(true),
                 ),
         )
@@ -23,6 +23,6 @@ fn main() {
 
     //
     if let Some(sub_matches) = app_matches.subcommand_matches("whitespace") {
-        lib::whitespace(sub_matches.value_of("file").unwrap());
+        print!("{}", lib::whitespace(sub_matches.value_of("file").unwrap()));
     }
 }

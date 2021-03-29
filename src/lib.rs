@@ -1,11 +1,40 @@
 use std::fs::File;
-use std::io::{self, prelude::*, BufReader};
+use std::io::prelude::*;
 
 pub fn whitespace(path: &str) -> String {
-    let mut output = String::new();
-    let f = File::open(path).expect(format!("File {} not found", path).as_str());
+    let mut f = File::open(path).expect(format!("File {} not found", path).as_str());
+    let mut buffer = String::new();
 
-    output
+    let size = f.read_to_string(&mut buffer).unwrap();
+    let mut output: Vec<char> = Vec::with_capacity(size);
+
+    // Checks for whitespace only if check is true
+    let mut check = false;
+
+    // If non whitespace character is seen for the first time,
+    // set output to
+    let mut first = true;
+
+    // Removing whitespace after each line
+    for ch in buffer.chars().rev() {
+        if ch == '\n' {
+            check = true;
+            output.push('\n');
+        } else if check {
+            if first {
+                output.clear();
+                output.push('\n');
+                first = false;
+            }
+            if ch != ' ' {
+                check = false;
+                output.push(ch);
+            }
+        } else {
+            output.push(ch);
+        }
+    }
+    output.into_iter().rev().collect::<String>()
 }
 
 #[cfg(test)]
@@ -14,15 +43,10 @@ mod tests {
 
     #[test]
     fn test_whitespace() {
-        let mut f1 = File::open("testfiles/input/a.txt").unwrap();
-        let mut f2 = File::open("testfiles/output/a.txt").unwrap();
+        let mut f = File::open("testfiles/output/a.txt").unwrap();
+        let mut buffer = String::new();
+        f.read_to_string(&mut buffer).unwrap();
 
-        let mut buffer1 = String::new();
-        let mut buffer2 = String::new();
-
-        f1.read_to_string(&mut buffer1).unwrap();
-        f2.read_to_string(&mut buffer2).unwrap();
-
-        assert_eq!(buffer1, buffer2);
+        assert_eq!(whitespace("testfiles/input/a.txt"), buffer);
     }
 }
