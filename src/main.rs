@@ -4,13 +4,13 @@ use clap::{App, Arg, SubCommand};
 
 fn main() {
     let app_matches = App::new("formatter-rs")
-        .version("0.1.0")
+        .version("0.1.1")
         .author("Mohammad Aadil Shabier, aadilshabier1@gmail.com")
         .about("Simple rust file formatter")
         .subcommand(
             SubCommand::with_name("whitespace")
                 .about("Removes unwanted whitespace")
-                .version("1.0")
+                .version("1.1")
                 .arg(
                     Arg::with_name("file")
                         .long("file")

@@ -1,6 +1,6 @@
 [package]
 name = "formatter-rs"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Mohammad Aadil Shabier <64919407+aadilshabier@users.noreply.github.com>"]
 edition = "2018"
 
