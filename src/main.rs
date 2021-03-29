@@ -3,7 +3,7 @@ mod lib;
 use clap::{App, Arg, SubCommand};
 
 fn main() {
-    let matches = App::new("formatter-rs")
+    let app_matches = App::new("formatter-rs")
         .version("1.0")
         .author("Mohammad Aadil Shabier, aadilshabier1@gmail.com")
         .about("Simple rust file formatter")
@@ -21,7 +21,8 @@ fn main() {
         )
         .get_matches();
 
-    if let Some(matches) = matches.subcommand_matches("whitespace") {
-        lib::whitespace(matches.value_of("file").unwrap());
+    //
+    if let Some(sub_matches) = app_matches.subcommand_matches("whitespace") {
+        lib::whitespace(sub_matches.value_of("file").unwrap());
     }
 }
