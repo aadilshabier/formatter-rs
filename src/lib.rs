@@ -19,7 +19,7 @@ pub fn whitespace(path: &str, target: &str) {
             check = true;
             output.push('\n');
         } else if check {
-            if ch != ' ' {
+            if !ch.is_whitespace() {
                 check = false;
                 output.push(ch);
             }
