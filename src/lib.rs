@@ -8,25 +8,17 @@ pub fn whitespace(path: &str, target: &str) {
 
     let size = f.read_to_string(&mut buffer).unwrap();
     let mut output: Vec<char> = Vec::with_capacity(size);
+    output.push('\n');
 
     // Checks for whitespace only if check is true
-    let mut check = false;
-
-    // If non whitespace character is seen for the first time,
-    // set output to
-    let mut first = true;
+    let mut check = true;
 
     // Removing whitespace after each line
-    for ch in buffer.chars().rev() {
+    for ch in buffer.chars().rev().skip_while(|ch| *ch == '\n') {
         if ch == '\n' {
             check = true;
             output.push('\n');
         } else if check {
-            if first {
-                output.clear();
-                output.push('\n');
-                first = false;
-            }
             if ch != ' ' {
                 check = false;
                 output.push(ch);
@@ -40,15 +32,12 @@ pub fn whitespace(path: &str, target: &str) {
 
     // If target not set print to stdout
     if target == "" {
-        let stdout = stdout();
-        let mut writer = BufWriter::new(stdout.lock());
-
-        writer.write_all(output.as_bytes()).unwrap();
+        print!("{}", output);
     } else {
         let f = File::create(target).unwrap();
         let mut writer = BufWriter::new(f);
 
-        writer.write_all(output.as_bytes()).unwrap();
+        write!(&mut writer, "{}", output).unwrap();
     }
 }
 
