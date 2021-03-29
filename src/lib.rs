@@ -1,7 +1,8 @@
 use std::fs::File;
-use std::io::prelude::*;
+use std::io::BufWriter;
+use std::io::{prelude::*, stdout};
 
-pub fn whitespace(path: &str) -> String {
+pub fn whitespace(path: &str, target: &str) {
     let mut f = File::open(path).expect(format!("File {} not found", path).as_str());
     let mut buffer = String::new();
 
@@ -34,7 +35,21 @@ pub fn whitespace(path: &str) -> String {
             output.push(ch);
         }
     }
-    output.into_iter().rev().collect::<String>()
+
+    let output = output.into_iter().rev().collect::<String>();
+
+    // If target not set print to stdout
+    if target == "" {
+        let stdout = stdout();
+        let mut writer = BufWriter::new(stdout.lock());
+
+        writer.write_all(output.as_bytes()).unwrap();
+    } else {
+        let f = File::create(target).unwrap();
+        let mut writer = BufWriter::new(f);
+
+        writer.write_all(output.as_bytes()).unwrap();
+    }
 }
 
 #[cfg(test)]
@@ -43,10 +58,6 @@ mod tests {
 
     #[test]
     fn test_whitespace() {
-        let mut f = File::open("testfiles/output/a.txt").unwrap();
-        let mut buffer = String::new();
-        f.read_to_string(&mut buffer).unwrap();
-
-        assert_eq!(whitespace("testfiles/input/a.txt"), buffer);
+        todo!("Rewrite tests");
     }
 }
