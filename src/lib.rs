@@ -44,22 +44,15 @@ pub fn whitespace(path: &str, target: &str) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::fs;
 
     #[test]
     fn test_whitespace() {
-        let mut expected_output = String::new();
-        let mut test_output = String::new();
-
-        File::open("testfiles/output/a.txt")
-            .unwrap()
-            .read_to_string(&mut expected_output)
-            .unwrap();
         whitespace("testfiles/input/a.txt", "tmp/a.txt");
 
-        File::open("tmp/a.txt")
-            .unwrap()
-            .read_to_string(&mut &mut test_output)
-            .unwrap();
+        let expected_output = fs::read_to_string("testfiles/output/a.txt").unwrap();
+        let test_output = fs::read_to_string("tmp/a.txt").unwrap();
+        fs::remove_file("tmp/a.txt").unwrap();
 
         assert_eq!(test_output, expected_output);
     }
