@@ -13,6 +13,7 @@ fn main() {
                 .version("1.1")
                 .arg(
                     Arg::with_name("file")
+                        .required(true)
                         .long("file")
                         .short("f")
                         .help("Removes unwanted whitespace and returns formatted text")
@@ -23,8 +24,7 @@ fn main() {
                         .long("target")
                         .short("t")
                         .help("Target to save the formatted file at")
-                        .takes_value(true)
-                        .default_value(""),
+                        .takes_value(true),
                 ),
         )
         .get_matches();
@@ -33,7 +33,8 @@ fn main() {
     if let Some(sub_matches) = app_matches.subcommand_matches("whitespace") {
         lib::whitespace(
             sub_matches.value_of("file").unwrap(),
-            sub_matches.value_of("target").unwrap(),
-        );
+            sub_matches.value_of("target"),
+        )
+        .unwrap();
     }
 }
