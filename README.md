@@ -1,8 +1,8 @@
 # Formatter-rs
 
-A simple file formatter. This is a project to help me learn the Rust programming language
+A simple file formatter. This is a project to help me learn the Rust programming language.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: GPL v3](https://img.shields.io/github/license/aadilshabier/formatter-rs)](LICENSE)
 
 ## Aims
 
@@ -16,7 +16,7 @@ A simple file formatter. This is a project to help me learn the Rust programming
    ### Usage:
 
    ```bash
-   $ formatter-rs whitespace --file file1.txt > file2.txt
+   $ formatter-rs whitespace --file file1.txt --target file2.txt
    ```
 
    This formats the contents of file1.txt and writes it into a new file / replaces old file named file2.txt.
