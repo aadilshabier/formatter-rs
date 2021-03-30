@@ -2,7 +2,7 @@
 
 A simple file formatter. This is a project to help me learn the Rust programming language.
 
-[![License: GPL v3](https://img.shields.io/github/license/aadilshabier/formatter-rs)](LICENSE)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 ## Aims
 
