@@ -1,40 +1,34 @@
-use std::fs::write;
-use std::io;
+use std::fs::{self, File};
+use std::io::{self, prelude::*, BufWriter};
 
 pub fn whitespace(path: &str, target: Option<&str>) -> io::Result<()> {
-    let buffer = std::fs::read_to_string(path)?;
-    let size = buffer.len();
-    let mut output: Vec<char> = vec!['\n'];
-    output.reserve(size - 1);
+    let buffer = fs::read_to_string(path)?;
 
-    // Checks for whitespace only if check is true
-    let mut check = true;
+    // number of wanted characters ~ 5/6 * length of line
+    let mut output: Vec<&str> = Vec::with_capacity(buffer.len() * 5 / 6);
 
     // Removing whitespace after each line
-    for ch in buffer.chars().rev().skip_while(|ch| (*ch).is_whitespace()) {
-        if ch == '\n' {
-            check = true;
-            output.push('\n');
-        } else if check {
-            if !ch.is_whitespace() {
-                check = false;
-                output.push(ch);
-            }
-        } else {
-            output.push(ch);
-        }
-    }
-
-    let output = output.into_iter().rev().collect::<String>();
-
-    // If target not set print to stdout
+    buffer
+        .lines()
+        .rev()
+        // (A or B) is the same as ~(~A and ~B)
+        .skip_while(|line| !((*line) != "" && !(*line).chars().rev().all(|x| x.is_whitespace())))
+        .for_each(|line| output.push(line.trim_end()));
 
     match target {
-        Some(filename) => {
-            write(filename, output)?;
+        Some(target) => {
+            let f = File::create(target)?;
+            let mut writer = BufWriter::new(f);
+            output
+                .iter()
+                .rev()
+                .for_each(|line| writeln!(writer, "{}", *line).expect("Unable to write to file"));
         }
         None => {
-            print!("{}", output);
+            output
+                .into_iter()
+                .rev()
+                .for_each(|line| println!("{}", line));
         }
     };
 

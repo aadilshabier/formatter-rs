@@ -45,7 +45,7 @@ fn main() {
         )
         .unwrap();
         if sub_matches.is_present("debug") {
-            println!("Took {} to execute", instant.elapsed().as_secs_f64());
+            println!("Took {} s to execute", instant.elapsed().as_secs_f64());
         }
     }
 }
