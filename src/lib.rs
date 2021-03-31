@@ -1,5 +1,5 @@
-use std::fs::File;
-use std::io::{self, prelude::*, BufWriter};
+use std::fs::{write, File};
+use std::io::{self, prelude::*};
 
 pub fn whitespace(path: &str, target: Option<&str>) -> io::Result<()> {
     let mut f = File::open(path).expect(format!("File {} not found", path).as_str());
@@ -33,10 +33,7 @@ pub fn whitespace(path: &str, target: Option<&str>) -> io::Result<()> {
 
     match target {
         Some(filename) => {
-            let f = File::create(filename).unwrap();
-            let mut writer = BufWriter::new(f);
-
-            write!(writer, "{}", output).unwrap();
+            write(filename, output)?;
         }
         None => {
             print!("{}", output);
