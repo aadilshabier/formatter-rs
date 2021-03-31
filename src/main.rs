@@ -1,6 +1,7 @@
 extern crate clap;
 mod lib;
 use clap::{App, Arg, SubCommand};
+use std::time::Instant;
 
 fn main() {
     let app_matches = App::new("formatter-rs")
@@ -25,16 +26,26 @@ fn main() {
                         .short("t")
                         .help("Target to save the formatted file at")
                         .takes_value(true),
+                )
+                .arg(
+                    Arg::with_name("debug")
+                        .long("debug")
+                        .short("d")
+                        .help("Print debug information"),
                 ),
         )
         .get_matches();
 
     //
     if let Some(sub_matches) = app_matches.subcommand_matches("whitespace") {
+        let instant = Instant::now();
         lib::whitespace(
             sub_matches.value_of("file").unwrap(),
             sub_matches.value_of("target"),
         )
         .unwrap();
+        if sub_matches.is_present("debug") {
+            println!("Took {} to execute", instant.elapsed().as_secs_f64());
+        }
     }
 }
