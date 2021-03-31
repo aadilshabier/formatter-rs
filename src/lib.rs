@@ -1,11 +1,9 @@
-use std::fs::{write, File};
-use std::io::{self, prelude::*};
+use std::fs::write;
+use std::io;
 
 pub fn whitespace(path: &str, target: Option<&str>) -> io::Result<()> {
-    let mut f = File::open(path).expect(format!("File {} not found", path).as_str());
-    let mut buffer = String::new();
-
-    let size = f.read_to_string(&mut buffer)?;
+    let buffer = std::fs::read_to_string(path)?;
+    let size = buffer.len();
     let mut output: Vec<char> = vec!['\n'];
     output.reserve(size - 1);
 
