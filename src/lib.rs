@@ -1,33 +1,33 @@
-use std::fs::{self, File};
-use std::io::{self, prelude::*, BufWriter};
+use std::fs::File;
+use std::io::{self, prelude::*};
 
 pub fn whitespace<P: AsRef<std::path::Path>>(path: P, target: Option<P>) -> io::Result<()> {
-    let buffer = fs::read_to_string(path)?;
+    let f = File::open(path)?;
+    let mut reader = io::BufReader::new(f);
 
-    let mut output: Vec<&str> = Vec::with_capacity(buffer.len());
+    let mut buf = String::new();
+    let mut temp = String::new();
+    let mut out = String::new();
 
-    // Removing whitespace after each line
-    buffer
-        .lines()
-        .rev()
-        // (A or B) is the same as ~(~A and ~B)
-        .skip_while(|line| !((*line) != "" && !(*line).chars().rev().all(|x| x.is_whitespace())))
-        .for_each(|line| output.push(line.trim_end()));
+    while reader.read_line(&mut buf)? != 0 {
+        if !(buf.chars().all(|x| x.is_whitespace())) {
+            out.push_str(temp.as_str());
+            temp.clear();
+            out.push_str(buf.trim_end());
+            out.push('\n');
+        } else {
+            temp.push('\n');
+        }
+        buf.clear();
+    }
 
     match target {
         Some(target) => {
-            let f = File::create(target)?;
-            let mut writer = BufWriter::new(f);
-            output
-                .iter()
-                .rev()
-                .for_each(|line| writeln!(writer, "{}", *line).expect("Unable to write to file"));
+            let mut file = File::create(target)?;
+            file.write_all(out.as_bytes())?;
         }
         None => {
-            output
-                .into_iter()
-                .rev()
-                .for_each(|line| println!("{}", line));
+            println!("{}", out);
         }
     };
 
@@ -41,9 +41,9 @@ mod tests {
 
     #[test]
     fn test_whitespace() {
-        whitespace("testfiles/input/a.txt", Some("tmp/a.txt")).unwrap();
+        whitespace("testfiles/testin.txt", Some("tmp/a.txt")).unwrap();
 
-        let expected_output = fs::read_to_string("testfiles/output/a.txt").unwrap();
+        let expected_output = fs::read_to_string("testfiles/testout.txt").unwrap();
         let test_output = fs::read_to_string("tmp/a.txt").unwrap();
         fs::remove_file("tmp/a.txt").unwrap();
 
