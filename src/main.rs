@@ -18,14 +18,18 @@ fn main() {
                         .long("file")
                         .short("f")
                         .help("Removes unwanted whitespace and returns formatted text")
-                        .takes_value(true),
+                        .takes_value(true)
+                        .index(1),
                 )
                 .arg(
                     Arg::with_name("target")
                         .long("target")
                         .short("t")
-                        .help("Target to save the formatted file at")
-                        .takes_value(true),
+                        .help(
+                            "Target location to save the formatted file. Outputs to stdout if not given"
+                        )
+                        .takes_value(true)
+                        .index(2),
                 )
                 .arg(
                     Arg::with_name("debug")
