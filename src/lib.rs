@@ -1,11 +1,10 @@
 use std::fs::{self, File};
 use std::io::{self, prelude::*, BufWriter};
 
-pub fn whitespace(path: &str, target: Option<&str>) -> io::Result<()> {
+pub fn whitespace<P: AsRef<std::path::Path>>(path: P, target: Option<P>) -> io::Result<()> {
     let buffer = fs::read_to_string(path)?;
 
-    // number of wanted characters ~ 5/6 * length of line
-    let mut output: Vec<&str> = Vec::with_capacity(buffer.len() * 5 / 6);
+    let mut output: Vec<&str> = Vec::with_capacity(buffer.len());
 
     // Removing whitespace after each line
     buffer
