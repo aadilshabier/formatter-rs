@@ -29,25 +29,37 @@ fn main() {
                             "Target location to save the formatted file. Outputs to stdout if not given"
                         )
                         .takes_value(true)
-                        .index(2),
+                        .index(2)
+                        .conflicts_with("write")
                 )
                 .arg(
                     Arg::with_name("debug")
                         .long("debug")
                         .short("d")
                         .help("Print debug information"),
-                ),
+                )
+                .arg(
+                    Arg::with_name("write")
+                        .long("write")
+                        .short("w")
+                        .help("Whether formatted text is written on source")
+                )
         )
         .get_matches();
 
     //
     if let Some(sub_matches) = app_matches.subcommand_matches("whitespace") {
         let instant = Instant::now();
-        lib::whitespace(
-            sub_matches.value_of("file").unwrap(),
-            sub_matches.value_of("target"),
-        )
-        .unwrap();
+
+        let source = sub_matches.value_of("file");
+        let target = if sub_matches.is_present("write") {
+            source
+        } else {
+            sub_matches.value_of("target")
+        };
+
+        lib::whitespace(source.unwrap(), target).unwrap();
+
         if sub_matches.is_present("debug") {
             println!("Took {} s to execute", instant.elapsed().as_secs_f64());
         }
