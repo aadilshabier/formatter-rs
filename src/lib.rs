@@ -1,11 +1,11 @@
 use std::fs::File;
 use std::io::{self, prelude::*};
 
-pub fn whitespace<P>(path: P, target: Option<P>) -> io::Result<()>
+pub fn whitespace<P>(source: P, target: Option<P>) -> io::Result<()>
 where
     P: AsRef<std::path::Path>,
 {
-    let f = File::open(path)?;
+    let f = File::open(source)?;
     let mut reader = io::BufReader::new(f);
 
     let mut buf = String::new();

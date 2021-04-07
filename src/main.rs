@@ -13,11 +13,11 @@ fn main() {
                 .about("Removes unwanted whitespace")
                 .version("1.2")
                 .arg(
-                    Arg::with_name("file")
+                    Arg::with_name("source")
                         .required(true)
-                        .long("file")
-                        .short("f")
-                        .help("Removes unwanted whitespace and returns formatted text")
+                        .long("source")
+                        .short("s")
+                        .help("Source file to format")
                         .takes_value(true)
                         .index(1),
                 )
@@ -47,7 +47,6 @@ fn main() {
         )
         .get_matches();
 
-    //
     if let Some(sub_matches) = app_matches.subcommand_matches("whitespace") {
         let instant = Instant::now();
 
